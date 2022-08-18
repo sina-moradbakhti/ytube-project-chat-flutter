@@ -6,8 +6,14 @@ class PrimaryTextfield extends StatelessWidget {
   final IconData? prefixIcon;
   final bool? isPassword;
   final int? maxLength;
+  final Function(String)? onChanged;
   const PrimaryTextfield(
-      {Key? key, this.hint, this.prefixIcon, this.isPassword, this.maxLength})
+      {Key? key,
+      this.hint,
+      this.prefixIcon,
+      this.isPassword,
+      this.maxLength,
+      this.onChanged})
       : super(key: key);
 
   @override
@@ -16,6 +22,8 @@ class PrimaryTextfield extends StatelessWidget {
       height: 50,
       child: TextField(
         maxLength: maxLength ?? 100,
+        onChanged:
+            onChanged != null ? (newValue) => onChanged!(newValue) : null,
         style: MyTextStyles.textfield,
         maxLines: 1,
         minLines: 1,

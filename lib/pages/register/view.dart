@@ -1,12 +1,17 @@
 import 'package:chatify/components/buttons/primary_button.dart';
 import 'package:chatify/components/buttons/underline_button.dart';
+import 'package:chatify/components/loading.dart';
 import 'package:chatify/components/textfields/primary_textfield.dart';
 import 'package:chatify/constants/text_styles.dart';
+import 'package:chatify/pages/register/register.get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Register extends StatelessWidget {
-  const Register({Key? key}) : super(key: key);
+  Register({Key? key}) : super(key: key);
+
+  final registerGet = RegisterGet();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,7 @@ class Register extends StatelessWidget {
         title: const Text('Register'),
         leading: IconButton(
           padding: EdgeInsets.zero,
-          onPressed: () {},
+          onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back),
         ),
       ),
@@ -39,27 +44,38 @@ class Register extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Column(
                   children: [
-                    const PrimaryTextfield(
+                    PrimaryTextfield(
                       maxLength: 30,
                       hint: 'Enter Full name',
+                      onChanged: (newVal) =>
+                          registerGet.fullname.value = newVal,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 15.0),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
                       child: PrimaryTextfield(
-                          hint: 'Enter Username',
-                          prefixIcon: CupertinoIcons.person),
+                        hint: 'Enter Username',
+                        prefixIcon: CupertinoIcons.person,
+                        onChanged: (newVal) =>
+                            registerGet.username.value = newVal,
+                      ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 15.0),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
                       child: PrimaryTextfield(
-                          hint: 'Enter Password',
-                          isPassword: true,
-                          prefixIcon: CupertinoIcons.lock),
+                        hint: 'Enter Password',
+                        isPassword: true,
+                        prefixIcon: CupertinoIcons.lock,
+                        onChanged: (newVal) =>
+                            registerGet.password.value = newVal,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0),
-                      child: PrimaryButton(
-                          title: 'Create New Account', onPressed: () {}),
+                      child: Obx(() => registerGet.loading.value
+                          ? MyLoading()
+                          : PrimaryButton(
+                              title: 'Create New Account',
+                              onPressed: registerGet.createNewAccount)),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),

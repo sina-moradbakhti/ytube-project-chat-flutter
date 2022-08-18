@@ -1,7 +1,9 @@
 import 'package:chatify/components/buttons/primary_button.dart';
 import 'package:chatify/components/buttons/underline_button.dart';
+import 'package:chatify/constants/config.dart';
 import 'package:chatify/constants/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({Key? key}) : super(key: key);
@@ -54,11 +56,14 @@ class Welcome extends StatelessWidget {
 
   Widget get _buttons => Column(
         children: [
-          PrimaryButton(title: 'Sign In', onPressed: () {}),
+          PrimaryButton(
+              title: 'Sign In',
+              onPressed: () => Get.toNamed(PageRoutes.signIn)),
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
-            child:
-                UnderlineButton(title: 'Create new account?', onPressed: () {}),
+            child: UnderlineButton(
+                title: 'Create new account?',
+                onPressed: () => Get.toNamed(PageRoutes.register)),
           ),
         ],
       );
