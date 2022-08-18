@@ -1,3 +1,4 @@
+import 'package:chatify/models/me.dart';
 import 'package:get_storage/get_storage.dart';
 
 class UserCacheManager {
@@ -10,6 +11,16 @@ class UserCacheManager {
   static const String USER_FULLNAME_KEY = '--user-fullname-key';
   static const String USER_TOKEN_KEY = '--user-token-key';
 
+  static Me getUserData() {
+    final box = GetStorage();
+    return Me(
+      fullname: box.read(USER_FULLNAME_KEY) ?? '',
+      token: box.read(USER_TOKEN_KEY),
+      userId: box.read(USER_ID_KEY),
+      username: box.read(USER_NAME_KEY),
+    );
+  }
+
   static Future<void> save(
       {String userId = '',
       String fullname = '',
@@ -20,6 +31,11 @@ class UserCacheManager {
     await box.write(USER_FULLNAME_KEY, fullname);
     await box.write(USER_NAME_KEY, username);
     await box.write(USER_TOKEN_KEY, token);
+  }
+
+  static Future<void> clear() async {
+    final box = GetStorage();
+    await box.erase();
   }
 
   static Future<void> checkLogin() async {

@@ -1,10 +1,12 @@
 import 'package:chatify/constants/text_styles.dart';
+import 'package:chatify/models/me.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Config {
   Config._();
   static const httpsServicesBaseUrl = 'http://localhost:8888';
+  static const socketServerBaseUrl = 'http://localhost:8888';
   static ThemeData primaryThemeData = ThemeData(
       primarySwatch: Colors.green,
       fontFamily: 'Nexa',
@@ -29,6 +31,8 @@ class Config {
           centerTitle: true,
           titleTextStyle: MyTextStyles.appbar));
 
+  static Me? me;
+
   static void errorHandler({String title = '', String message = ''}) {
     Get.snackbar(title, message,
         backgroundColor: Colors.grey.shade200,
@@ -44,4 +48,6 @@ class PageRoutes {
   static const String register = '/register';
   static const String signIn = '/sign-in';
   static const String messages = '/messages';
+  static const String settings = '/settings';
+  static const String splash = '/splash';
 }

@@ -1,12 +1,17 @@
 import 'package:chatify/components/buttons/primary_button.dart';
 import 'package:chatify/components/buttons/underline_button.dart';
+import 'package:chatify/components/loading.dart';
 import 'package:chatify/components/textfields/primary_textfield.dart';
 import 'package:chatify/constants/text_styles.dart';
+import 'package:chatify/pages/login/login.get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
+  Login({Key? key}) : super(key: key);
+
+  final loginGet = LoginGet();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,7 @@ class Login extends StatelessWidget {
         title: const Text('Sign In'),
         leading: IconButton(
           padding: EdgeInsets.zero,
-          onPressed: () {},
+          onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back),
         ),
       ),
@@ -37,23 +42,32 @@ class Login extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  const PrimaryTextfield(
-                      hint: 'Enter Username',
-                      prefixIcon: CupertinoIcons.person),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 15.0),
+                  PrimaryTextfield(
+                    hint: 'Enter Username',
+                    prefixIcon: CupertinoIcons.person,
+                    onChanged: (newVal) => loginGet.username.value = newVal,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
                     child: PrimaryTextfield(
-                        hint: 'Enter Password',
-                        isPassword: true,
-                        prefixIcon: CupertinoIcons.lock),
+                      hint: 'Enter Password',
+                      isPassword: true,
+                      prefixIcon: CupertinoIcons.lock,
+                      onChanged: (newVal) => loginGet.password.value = newVal,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 30.0),
-                    child: PrimaryButton(title: 'Sign In', onPressed: () {}),
+                    child: Obx(() => loginGet.loading.value
+                        ? const MyLoading()
+                        : PrimaryButton(
+                            title: 'Sign In',
+                            onPressed: loginGet.loginToAccount)),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
-                    child: UnderlineButton(title: 'Forgot password?', onPressed: () {}),
+                    child: UnderlineButton(
+                        title: 'Forgot password?', onPressed: () {}),
                   ),
                 ],
               ),
@@ -63,43 +77,4 @@ class Login extends StatelessWidget {
       ),
     );
   }
-
-  Widget get _title => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              'Welcome to',
-              style: MyTextStyles.caption,
-            ),
-            Text(
-              'Chatify App',
-              style: MyTextStyles.header,
-            ),
-          ],
-        ),
-      );
-
-  Widget get _logo => Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: SizedBox(
-            width: 100,
-            height: 100,
-            child: Image.asset('assets/images/png/chatify_logo.png'),
-          ),
-        ),
-      );
-
-  Widget get _buttons => Column(
-        children: [
-          PrimaryButton(title: 'Sign In', onPressed: () {}),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child:
-                UnderlineButton(title: 'Create new account?', onPressed: () {}),
-          ),
-        ],
-      );
 }

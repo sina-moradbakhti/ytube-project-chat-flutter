@@ -1,19 +1,16 @@
 import 'package:chatify/cacheManager/user.cache.dart';
 import 'package:chatify/constants/config.dart';
-import 'package:chatify/services/register.service.dart';
+import 'package:chatify/services/login.service.dart';
 import 'package:get/get.dart';
 
-class RegisterGet extends GetxController {
-  var fullname = ''.obs;
+class LoginGet extends GetxController {
   var username = ''.obs;
   var password = ''.obs;
 
   var loading = false.obs;
 
-  void createNewAccount() async {
-    if (fullname.value.isEmpty ||
-        username.value.isEmpty ||
-        password.value.isEmpty) {
+  void loginToAccount() async {
+    if (username.value.isEmpty || password.value.isEmpty) {
       Config.errorHandler(
           title: 'Empty fields', message: 'Please enter all the fields!');
       return;
@@ -23,12 +20,9 @@ class RegisterGet extends GetxController {
       loading.value = true;
 
       try {
-        final service = RegisterService();
-        final result = await service.call({
-          'fullname': fullname.value,
-          'username': username.value,
-          'password': password.value
-        });
+        final service = LoginService();
+        final result = await service
+            .call({'username': username.value, 'password': password.value});
         loading.value = false;
         if (result) {
           Config.me = UserCacheManager.getUserData();
