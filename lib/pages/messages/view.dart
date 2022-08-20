@@ -1,5 +1,6 @@
 import 'package:chatify/constants/colors.dart';
 import 'package:chatify/constants/config.dart';
+import 'package:chatify/pages/messages/messages.get.dart';
 import 'package:chatify/pages/messages/view.chats.dart';
 import 'package:chatify/pages/messages/view.rooms.dart';
 import 'package:chatify/pages/messages/view.tabbar.dart';
@@ -16,6 +17,7 @@ class Messages extends StatefulWidget {
 
 class _MessagesState extends State<Messages> with TickerProviderStateMixin {
   TabController? _controller;
+  final messagesGet = Get.put(MessagesGet());
 
   @override
   void initState() {
@@ -41,7 +43,20 @@ class _MessagesState extends State<Messages> with TickerProviderStateMixin {
             MessagesChatsTab(),
             MessagesRoomsTab(),
           ]),
-          MessagesTabbar(controller: _controller!)
+          MessagesTabbar(controller: _controller!),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  child: const Icon(Icons.add),
+                  backgroundColor: MyColors.primaryColor,
+                  onPressed: () => messagesGet.addContact(),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

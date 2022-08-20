@@ -1,11 +1,13 @@
 import 'package:chatify/cacheManager/user.cache.dart';
 import 'package:chatify/constants/config.dart';
+import 'package:chatify/pages/chat/view.dart';
 import 'package:chatify/pages/login/view.dart';
 import 'package:chatify/pages/messages/view.dart';
 import 'package:chatify/pages/register/view.dart';
 import 'package:chatify/pages/settings/view.dart';
 import 'package:chatify/pages/splash/view.dart';
 import 'package:chatify/pages/welcome/view.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:get_storage/get_storage.dart';
@@ -20,18 +22,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Chatify',
-      theme: Config.primaryThemeData,
-      initialRoute: PageRoutes.splash,
-      getPages: [
-        GetPage(name: PageRoutes.welcome, page: () => const Welcome()),
-        GetPage(name: PageRoutes.register, page: () => Register()),
-        GetPage(name: PageRoutes.signIn, page: () => Login()),
-        GetPage(name: PageRoutes.messages, page: () => Messages()),
-        GetPage(name: PageRoutes.settings, page: () => Settings()),
-        GetPage(name: PageRoutes.splash, page: () => Splash()),
-      ],
-    );
+    return GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: GetMaterialApp(
+          title: 'Chatify',
+          theme: Config.primaryThemeData,
+          initialRoute: PageRoutes.splash,
+          getPages: [
+            GetPage(name: PageRoutes.welcome, page: () => const Welcome()),
+            GetPage(name: PageRoutes.register, page: () => Register()),
+            GetPage(name: PageRoutes.signIn, page: () => Login()),
+            GetPage(name: PageRoutes.messages, page: () => Messages()),
+            GetPage(name: PageRoutes.settings, page: () => Settings()),
+            GetPage(name: PageRoutes.splash, page: () => Splash()),
+            GetPage(name: PageRoutes.chat, page: () => Chat()),
+          ],
+        ));
   }
 }

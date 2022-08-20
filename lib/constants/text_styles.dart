@@ -4,6 +4,7 @@ class MyTextStyles {
   MyTextStyles._();
 
   static const header = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const header2 = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
   static const caption =
       TextStyle(fontSize: 23, fontWeight: FontWeight.normal, height: 2.5);
   static const button =

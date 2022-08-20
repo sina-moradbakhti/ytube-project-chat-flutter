@@ -1,3 +1,5 @@
+import 'package:chatify/models/user.dart';
+
 class Me {
   String userId;
   String fullname;
@@ -9,4 +11,8 @@ class Me {
       required this.fullname,
       required this.userId,
       required this.username});
+
+  User exportToUser() {
+    return User(id: userId, fullname: fullname, username: username);
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:chatify/cacheManager/user.cache.dart';
 import 'package:chatify/constants/config.dart';
 import 'package:chatify/init.dart';
+import 'package:chatify/services/tokenFresher.service.dart';
 import 'package:get/get.dart';
 
 class SplashGet extends GetxController {
@@ -14,6 +15,11 @@ class SplashGet extends GetxController {
     await UserCacheManager.checkLogin();
     if (UserCacheManager.isUserLoggedIn) {
       Config.me = UserCacheManager.getUserData();
+      // Refresh Token
+      final service = TokenFresherService();
+      await service
+          .call({'userId': Config.me!.userId, 'userName': Config.me!.username});
+
       AppInit().initSocketClient();
       Get.offAllNamed(PageRoutes.messages);
     } else {

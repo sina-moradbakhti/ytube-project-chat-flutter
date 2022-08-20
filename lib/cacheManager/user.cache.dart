@@ -22,15 +22,15 @@ class UserCacheManager {
   }
 
   static Future<void> save(
-      {String userId = '',
-      String fullname = '',
-      String username = '',
-      String token = ''}) async {
+      {String? userId,
+      String? fullname,
+      String? username,
+      String? token}) async {
     final box = GetStorage();
-    await box.write(USER_ID_KEY, userId);
-    await box.write(USER_FULLNAME_KEY, fullname);
-    await box.write(USER_NAME_KEY, username);
-    await box.write(USER_TOKEN_KEY, token);
+    if (userId != null) await box.write(USER_ID_KEY, userId);
+    if (fullname != null) await box.write(USER_FULLNAME_KEY, fullname);
+    if (username != null) await box.write(USER_NAME_KEY, username);
+    if (token != null) await box.write(USER_TOKEN_KEY, token);
   }
 
   static Future<void> clear() async {
