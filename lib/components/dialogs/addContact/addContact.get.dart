@@ -1,4 +1,7 @@
+import 'package:chatify/cacheManager/hive.cache.dart';
 import 'package:chatify/constants/config.dart';
+import 'package:chatify/models/contact.dart';
+import 'package:chatify/pages/messages/messages.get.dart';
 import 'package:chatify/services/addContact.service.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +21,9 @@ class AddContactGet extends GetxController {
       final result = await service.call({'username': username.value});
       loading.value = false;
       if (result != null) {
+        final messagesGet = Get.find<MessagesGet>();
+        await HiveCacheManager().save(Contact(user: result, messages: []));
+        messagesGet.init();
         Get.back();
         Get.toNamed(PageRoutes.chat, arguments: result);
       }

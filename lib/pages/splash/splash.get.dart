@@ -1,3 +1,4 @@
+import 'package:chatify/cacheManager/hive.cache.dart';
 import 'package:chatify/cacheManager/user.cache.dart';
 import 'package:chatify/constants/config.dart';
 import 'package:chatify/init.dart';
@@ -21,6 +22,7 @@ class SplashGet extends GetxController {
           .call({'userId': Config.me!.userId, 'userName': Config.me!.username});
 
       AppInit().initSocketClient();
+      HiveCacheManager().init();
       Get.offAllNamed(PageRoutes.messages);
     } else {
       Get.offAllNamed(PageRoutes.welcome);
