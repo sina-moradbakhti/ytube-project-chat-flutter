@@ -2,6 +2,7 @@ import 'package:chatify/cacheManager/hive.cache.dart';
 import 'package:chatify/cacheManager/user.cache.dart';
 import 'package:chatify/constants/config.dart';
 import 'package:chatify/init.dart';
+import 'package:chatify/services/offlineMessages.services.dart';
 import 'package:chatify/services/tokenFresher.service.dart';
 import 'package:get/get.dart';
 
@@ -23,6 +24,11 @@ class SplashGet extends GetxController {
       // Init Socket & HiveCache Manager
       AppInit().initSocketClient();
       await HiveCacheManager().init();
+
+      // Get latest offline messages
+      final offlineMsgServices = OfflineMessagesServices();
+      await offlineMsgServices.call({'userId': Config.me!.userId});
+
       // Route user to messages list
       Get.offAllNamed(PageRoutes.messages);
     } else {

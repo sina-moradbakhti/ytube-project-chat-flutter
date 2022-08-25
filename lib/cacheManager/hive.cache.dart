@@ -21,6 +21,9 @@ class HiveCacheManager {
       final result = contactsBox!.get(contact.user.id);
       if (result == null) {
         await contactsBox!.put(contact.user.id, contact);
+      } else {
+        result.messages.addAll(contact.messages);
+        await contactsBox!.put(contact.user.id, result);
       }
     }
   }
