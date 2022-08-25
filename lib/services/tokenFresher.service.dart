@@ -8,7 +8,8 @@ import 'package:http/http.dart' as http;
 class TokenFresherService extends BaseService {
   final Uri url = Uri.parse('${Config.httpsServicesBaseUrl}/token-fresher');
   Future<void> call(Map<String, dynamic> args) async {
-    final client = http.Client();
+    try {
+      final client = http.Client();
     final response = await client.post(url,
         body: args, headers: {'Authorization': 'Bearer ${Config.me!.token}'});
     final decodedResponse = jsonDecode(response.body);
@@ -19,6 +20,9 @@ class TokenFresherService extends BaseService {
       Config.errorHandler(
           title: decodedResponse['error_code'],
           message: decodedResponse['message']);
+    }
+    } catch (er){
+      print(er);
     }
   }
 }

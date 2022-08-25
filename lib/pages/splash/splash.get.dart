@@ -20,9 +20,10 @@ class SplashGet extends GetxController {
       final service = TokenFresherService();
       await service
           .call({'userId': Config.me!.userId, 'userName': Config.me!.username});
-
+      // Init Socket & HiveCache Manager
       AppInit().initSocketClient();
-      HiveCacheManager().init();
+      await HiveCacheManager().init();
+      // Route user to messages list
       Get.offAllNamed(PageRoutes.messages);
     } else {
       Get.offAllNamed(PageRoutes.welcome);
