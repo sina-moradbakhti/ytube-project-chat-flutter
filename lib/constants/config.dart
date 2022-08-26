@@ -7,6 +7,8 @@ class Config {
   Config._();
   static const httpsServicesBaseUrl = 'http://localhost:8888';
   static const socketServerBaseUrl = 'http://localhost:8888';
+  static String showAvatarBaseUrl(String userId) =>
+      '${Config.httpsServicesBaseUrl}/avatar/$userId';
   static ThemeData primaryThemeData = ThemeData(
       primarySwatch: Colors.green,
       fontFamily: 'Nexa',
