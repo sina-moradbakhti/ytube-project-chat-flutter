@@ -11,9 +11,9 @@ class Splash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: MyLoading(),
-      ),
+      // body: Center(
+      //   child: MyLoading(),
+      // ),
     );
   }
 }

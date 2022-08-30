@@ -2,6 +2,7 @@ import 'package:chatify/cacheManager/user.cache.dart';
 import 'package:chatify/constants/config.dart';
 import 'package:chatify/models/contact.dart';
 import 'package:chatify/models/message.dart';
+import 'package:chatify/models/room.dart';
 import 'package:chatify/models/user.dart';
 import 'package:chatify/pages/chat/view.dart';
 import 'package:chatify/pages/login/view.dart';
@@ -22,6 +23,7 @@ void main() async {
   Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(MessageAdapter());
   Hive.registerAdapter(ContactAdapter());
+  Hive.registerAdapter(RoomAdapter());
   // Run app
   runApp(const MyApp());
 }

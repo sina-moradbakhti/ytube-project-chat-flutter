@@ -1,5 +1,7 @@
 import 'package:chatify/models/contact.dart';
 import 'package:chatify/models/message.dart';
+import 'package:chatify/models/room.dart';
+import 'package:chatify/models/user.dart';
 import 'package:hive/hive.dart';
 
 class HiveCacheManager {
@@ -10,9 +12,11 @@ class HiveCacheManager {
   HiveCacheManager._internal();
 
   Box<Contact>? contactsBox;
+  Box<Room>? roomsBox;
 
   init() async {
     contactsBox = await Hive.openBox<Contact>('contacts');
+    roomsBox = await Hive.openBox<Room>('rooms');
   }
 
   save(Contact contact) async {
@@ -24,6 +28,29 @@ class HiveCacheManager {
       } else {
         result.messages.addAll(contact.messages);
         await contactsBox!.put(contact.user.id, result);
+      }
+    }
+  }
+
+  saveRoom(Room room) async {
+    await init();
+    if (roomsBox != null && roomsBox!.isOpen) {
+      final result = roomsBox!.get(room.id);
+      if (result == null) {
+        await roomsBox!.put(room.id, room);
+      } else {
+        List<User> newMembers = [];
+        for (final newMember in room.members) {
+          if (result.members
+              .where((element) => element.id == newMember.id)
+              .toList()
+              .isEmpty) {
+            newMembers.add(newMember);
+          }
+        }
+        result.members.addAll(newMembers);
+        result.messages.addAll(room.messages);
+        await roomsBox!.put(room.id, result);
       }
     }
   }
@@ -61,6 +88,15 @@ class HiveCacheManager {
     await init();
     if (contactsBox != null && contactsBox!.isOpen) {
       return contactsBox!.values.toList();
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<Room>> getAllRooms() async {
+    await init();
+    if (roomsBox != null && roomsBox!.isOpen) {
+      return roomsBox!.values.toList();
     } else {
       return [];
     }

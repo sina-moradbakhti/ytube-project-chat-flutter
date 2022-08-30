@@ -1,41 +1,47 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user.dart';
+part of 'room.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class UserAdapter extends TypeAdapter<User> {
+class RoomAdapter extends TypeAdapter<Room> {
   @override
-  final int typeId = 2;
+  final int typeId = 4;
 
   @override
-  User read(BinaryReader reader) {
+  Room read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return User(
-      fullname: fields[1] as String,
-      id: fields[0] as String,
-      username: fields[2] as String,
-      role: fields[3] as String,
+    return Room(
+      creator: fields[0] as User,
+      name: fields[1] as String,
+      desc: fields[2] as String,
+      members: (fields[3] as List).cast<User>(),
+      id: fields[4] as String,
+      messages: (fields[5] as List).cast<Message>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, User obj) {
+  void write(BinaryWriter writer, Room obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.creator)
       ..writeByte(1)
-      ..write(obj.fullname)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.username)
+      ..write(obj.desc)
       ..writeByte(3)
-      ..write(obj.role);
+      ..write(obj.members)
+      ..writeByte(4)
+      ..write(obj.id)
+      ..writeByte(5)
+      ..write(obj.messages);
   }
 
   @override
@@ -44,7 +50,7 @@ class UserAdapter extends TypeAdapter<User> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UserAdapter &&
+      other is RoomAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

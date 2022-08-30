@@ -50,9 +50,11 @@ class _MessagesState extends State<Messages> with TickerProviderStateMixin {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(
-                  child: const Icon(Icons.add),
                   backgroundColor: MyColors.primaryColor,
-                  onPressed: () => messagesGet.addContact(),
+                  onPressed: () => _controller?.index == 0
+                      ? messagesGet.addContact()
+                      : messagesGet.addRoom(),
+                  child: const Icon(Icons.add),
                 ),
               ),
             ),

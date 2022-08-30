@@ -1,22 +1,40 @@
 import 'package:chatify/components/buttons/underline_button.dart';
+import 'package:chatify/components/room.widget.dart';
 import 'package:chatify/constants/colors.dart';
 import 'package:chatify/constants/text_styles.dart';
+import 'package:chatify/pages/messages/messages.get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MessagesRoomsTab extends StatelessWidget {
   MessagesRoomsTab({Key? key}) : super(key: key);
 
+  final messagesGet = Get.find<MessagesGet>();
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(
+      padding: const EdgeInsets.only(top: 60),
+      child: StreamBuilder(
+          stream: messagesGet.roomStream.stream,
+          builder: (context, snapshot) => messagesGet.rooms.isNotEmpty
+              ? ListView.builder(
+                  itemBuilder: (context, index) => RoomWidget(
+                        room: messagesGet.rooms[index],
+                      ),
+                  itemCount: messagesGet.rooms.length)
+              : _emptyWidget),
+    );
+  }
+
+  Widget get _emptyWidget => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
-              CupertinoIcons.group_solid,
+              CupertinoIcons.group,
               size: 70,
               color: Colors.grey.shade300,
             ),
@@ -27,11 +45,9 @@ class MessagesRoomsTab extends StatelessWidget {
             ),
             UnderlineButton(
               title: 'Make new one',
-              onPressed: () {},
+              onPressed: messagesGet.addRoom,
             )
           ],
         ),
-      ),
-    );
-  }
+      );
 }

@@ -10,13 +10,28 @@ class User extends HiveObject {
   String fullname;
   @HiveField(2)
   String username;
+  @HiveField(3)
+  String role;
 
-  User({required this.fullname, required this.id, required this.username});
+  User(
+      {required this.fullname,
+      required this.id,
+      required this.username,
+      this.role = 'normal'});
   factory User.fromJson(Map<String, dynamic> json) => User(
-      id: json['_id'], fullname: json['fullName'], username: json['userName']);
+      id: json['_id'] ?? '',
+      fullname: json['fullName'] ?? '',
+      username: json['userName'] ?? '',
+      role: json['role'] ?? 'normal');
 
   factory User.fromSocketJson(Map<String, dynamic> json) => User(
       id: json['userId'],
       fullname: json['fullname'],
       username: json['username']);
+
+      factory User.fromMakeRoomJson(Map<String, dynamic> json) => User(
+      id: json['userId'] ?? '',
+      fullname: json['fullName'] ?? '',
+      username: json['userName'] ?? '',
+      role: json['role'] ?? 'normal');
 }
