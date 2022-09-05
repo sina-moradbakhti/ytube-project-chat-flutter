@@ -29,8 +29,23 @@ class Chat extends StatelessWidget {
                 child: CircleAvatar(
                     radius: 20, backgroundColor: Colors.grey.shade300),
               ),
-              Text(chatGet.user?.fullname ?? '',
-                  style: MyTextStyles.button.copyWith(color: Colors.black))
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      chatGet.room != null
+                          ? (chatGet.room?.name ?? '')
+                          : (chatGet.user?.fullname ?? ''),
+                      style: MyTextStyles.button.copyWith(color: Colors.black)),
+                  if (chatGet.room != null)
+                    Text('${chatGet.room!.members.length} members',
+                        style: MyTextStyles.button.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 12))
+                ],
+              ),
             ],
           ),
         ),
@@ -55,25 +70,39 @@ class Chat extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final message = chatGet.messages[index];
                       final isMyMessage = message.isMyMessage();
-                      return ChatBubble(
-                        backGroundColor: isMyMessage
-                            ? MyColors.primaryColor
-                            : Colors.grey.shade400,
-                        margin: isMyMessage
-                            ? const EdgeInsets.only(bottom: 10, right: 10)
-                            : const EdgeInsets.only(bottom: 10, left: 10),
-                        padding: const EdgeInsets.all(16),
-                        clipper: ChatBubbleClipper4(
-                            type: isMyMessage
-                                ? BubbleType.sendBubble
-                                : BubbleType.receiverBubble,
-                            radius: 10),
-                        alignment: isMyMessage
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child:
-                            Text(message.message, style: MyTextStyles.button),
-                      );
+                      return chatGet.room != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 15, left: 10),
+                              child: Column(
+                                children: [
+                                  if (!isMyMessage)
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 10, left: 10),
+                                            child: CircleAvatar(
+                                                radius: 16,
+                                                backgroundColor:
+                                                    Colors.grey.shade300),
+                                          ),
+                                          Text(message.user.fullname,
+                                              style: MyTextStyles.small
+                                                  .copyWith(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                        ],
+                                      ),
+                                    ),
+                                  chatBubble(isMyMessage, message)
+                                ],
+                              ),
+                            )
+                          : chatBubble(isMyMessage, message);
                     });
               }),
           Align(
@@ -102,7 +131,9 @@ class Chat extends StatelessWidget {
                         suffixIcon: Obx(() => IconButton(
                             onPressed: chatGet.message.value.isEmpty
                                 ? null
-                                : chatGet.send,
+                                : (chatGet.room != null)
+                                    ? chatGet.sendMessageInRoom
+                                    : chatGet.send,
                             icon: Icon(
                               Icons.send,
                               color: chatGet.message.value.isEmpty
@@ -117,5 +148,22 @@ class Chat extends StatelessWidget {
         ],
       ),
     );
-  }
+  } // end build
+
+  Widget chatBubble(bool isMyMessage, var message) => ChatBubble(
+        backGroundColor:
+            isMyMessage ? MyColors.primaryColor : Colors.grey.shade400,
+        margin: isMyMessage
+            ? const EdgeInsets.only(bottom: 10, right: 20)
+            : const EdgeInsets.only(bottom: 10, left: 20),
+        padding: isMyMessage
+            ? const EdgeInsets.only(left: 10, right: 20, bottom: 10, top: 10)
+            : const EdgeInsets.only(left: 20, right: 10, bottom: 10, top: 10),
+        clipper: ChatBubbleClipper4(
+            type:
+                isMyMessage ? BubbleType.sendBubble : BubbleType.receiverBubble,
+            radius: 10),
+        alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
+        child: Text(message.message, style: MyTextStyles.chat),
+      );
 }

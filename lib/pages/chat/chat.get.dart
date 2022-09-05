@@ -3,6 +3,7 @@ import 'package:chatify/constants/config.dart';
 import 'package:chatify/init.dart';
 import 'package:chatify/models/contact.dart';
 import 'package:chatify/models/message.dart';
+import 'package:chatify/models/room.dart';
 import 'package:chatify/models/user.dart';
 import 'package:chatify/pages/messages/messages.get.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:rxdart/subjects.dart';
 
 class ChatGet extends GetxController {
   User? user;
+  Room? room;
   Contact? contact;
   var message = ''.obs;
   TextEditingController controller = TextEditingController();
@@ -21,17 +23,36 @@ class ChatGet extends GetxController {
 
   @override
   void onInit() {
-    user = Get.arguments;
-    appInit.currentChatUser = user;
+    if (Get.arguments.runtimeType == Room) {
+      room = Get.arguments;
+      appInit.currentChatRoom = room;
+      initRoom();
+    } else {
+      user = Get.arguments;
+      appInit.currentChatUser = user;
+      initContact();
+    }
 
     onUpdateStream.listen((_) {
       Future.delayed(const Duration(milliseconds: 100)).then((_) =>
           scrollController.jumpTo(scrollController.position.maxScrollExtent));
     });
 
-    initContact();
-
     super.onInit();
+  }
+
+  void initRoom() async {
+    room = await HiveCacheManager().getRoom(room?.id ?? '');
+
+    await HiveCacheManager().updateLastSeenRoom(room?.id ?? '');
+    (Get.find<MessagesGet>()).roomStream.sink.add(true);
+
+    messages.clear();
+    messages.addAll(room?.messages ?? []);
+    onUpdateStream.sink.add(true);
+
+    Future.delayed(const Duration(milliseconds: 100)).then((_) =>
+        scrollController.jumpTo(scrollController.position.maxScrollExtent));
   }
 
   void initContact() async {
@@ -51,6 +72,7 @@ class ChatGet extends GetxController {
   @override
   void dispose() {
     appInit.currentChatUser = null;
+    appInit.currentChatRoom = null;
     super.dispose();
   }
 
@@ -68,6 +90,25 @@ class ChatGet extends GetxController {
     messages.add(myMsg);
 
     HiveCacheManager().update(user!.id, myMsg);
+
+    message.value = '';
+    controller.clear();
+    onUpdateStream.sink.add(true);
+  }
+
+  void sendMessageInRoom() {
+    if (message.value.isEmpty) return;
+    appInit.socket?.emit(
+        'send-message', {'message': message.value, 'roomId': room?.id ?? ''});
+    final myMsg = Message(
+        date: DateTime.now(),
+        message: message.value,
+        user: Config.me!.exportToUser(),
+        seen: true,
+        roomId: room?.id ?? '');
+    messages.add(myMsg);
+
+    HiveCacheManager().updateRoom(room!.id, myMsg);
 
     message.value = '';
     controller.clear();

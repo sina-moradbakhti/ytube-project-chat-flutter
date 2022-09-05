@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:chatify/cacheManager/hive.cache.dart';
 import 'package:chatify/constants/config.dart';
+import 'package:chatify/init.dart';
 import 'package:chatify/models/contact.dart';
 import 'package:chatify/models/message.dart';
 import 'package:chatify/models/room.dart';
@@ -29,14 +30,31 @@ class InitServices extends BaseService {
   }
 
   Future<void> call(Map<String, dynamic> args) async {
+    List<Map<String, dynamic>> latestDates = [];
+    final rooms = await HiveCacheManager().getAllRooms();
+    for (final room in rooms) {
+      final date = room.messages.isNotEmpty
+          ? (room.messages
+              .where((element) => element.user.id != Config.me!.userId)
+              .last
+              .date
+              .toString())
+          : null;
+      latestDates.add({'roomId': room.id, 'dateTime': date});
+    }
+
+    var newArgs = args;
+    newArgs['latestDates'] = jsonEncode(latestDates);
+
     final client = http.Client();
     final response = await client.post(url,
-        body: args, headers: {'Authorization': 'Bearer ${Config.me!.token}'});
+        body: newArgs,
+        headers: {'Authorization': 'Bearer ${Config.me!.token}'});
     final decodedResponse = jsonDecode(response.body);
     if (response.statusCode == 200) {
       List<Room> rooms = [];
       for (final room in decodedResponse['data']['rooms']) {
-        rooms.add(Room(
+        final roomObject = Room(
             creator: User.fromJson(room['creatorUser'][0]),
             id: room['_id'],
             name: room['name'],
@@ -51,7 +69,18 @@ class InitServices extends BaseService {
                     role: memberItem['role'])
             ],
             desc: room['desc'] ?? '',
-            messages: const []));
+            messages: room['messages'].length > 0
+                ? ([
+                    for (final messageItem in room['messages'])
+                      Message(
+                          message: messageItem['message'],
+                          date: DateTime.parse(messageItem['dateTime']),
+                          user: User.fromJson(messageItem['fromUser'][0]),
+                          roomId: messageItem['roomId'])
+                  ])
+                : const []);
+        rooms.add(roomObject);
+        AppInit().socket?.emit('join-room', {'roomId': roomObject.id});
       }
 
       for (final room in rooms) {

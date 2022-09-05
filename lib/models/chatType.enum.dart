@@ -1,0 +1,1 @@
+enum ChatType { message, image, voice, sticker }

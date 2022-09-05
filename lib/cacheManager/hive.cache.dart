@@ -64,6 +64,15 @@ class HiveCacheManager {
     }
   }
 
+  updateRoom(String roomId, Message msg) async {
+    await init();
+    if (roomsBox != null && roomsBox!.isOpen) {
+      final room = roomsBox!.get(roomId);
+      room!.messages.add(msg);
+      await roomsBox!.put(roomId, room);
+    }
+  }
+
   updateLastSeen(String userId) async {
     await init();
     if (contactsBox != null && contactsBox!.isOpen) {
@@ -75,10 +84,39 @@ class HiveCacheManager {
     }
   }
 
+  updateLastSeenRoom(String roomId) async {
+    await init();
+    if (roomsBox != null && roomsBox!.isOpen) {
+      final room = roomsBox!.get(roomId);
+      for (int i = 0; i < room!.messages.length; i++) {
+        room.messages[i].seen = true;
+      }
+      await roomsBox!.put(roomId, room);
+    }
+  }
+
   Future<Contact?> get(String userId) async {
     await init();
     if (contactsBox != null && contactsBox!.isOpen) {
       return contactsBox!.get(userId);
+    } else {
+      return null;
+    }
+  }
+
+  Future<Room?> getRoom(String roomId) async {
+    await init();
+    if (roomsBox != null && roomsBox!.isOpen) {
+      return roomsBox!.get(roomId);
+    } else {
+      return null;
+    }
+  }
+
+  Future<DateTime?> getRoomLastMessageDateTime(String roomId) async {
+    await init();
+    if (roomsBox != null && roomsBox!.isOpen) {
+      return roomsBox!.get(roomId)?.messages.last.date;
     } else {
       return null;
     }

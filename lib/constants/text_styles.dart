@@ -20,4 +20,7 @@ class MyTextStyles {
       fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black);
   static const title =
       TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black);
+
+  static const chat =
+      TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white);
 }

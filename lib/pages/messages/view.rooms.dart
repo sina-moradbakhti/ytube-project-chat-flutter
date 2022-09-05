@@ -1,6 +1,5 @@
 import 'package:chatify/components/buttons/underline_button.dart';
 import 'package:chatify/components/room.widget.dart';
-import 'package:chatify/constants/colors.dart';
 import 'package:chatify/constants/text_styles.dart';
 import 'package:chatify/pages/messages/messages.get.dart';
 import 'package:flutter/cupertino.dart';

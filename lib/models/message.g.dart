@@ -20,6 +20,9 @@ class MessageAdapter extends TypeAdapter<Message> {
       date: fields[2] as DateTime,
       message: fields[1] as String,
       user: fields[0] as User,
+      roomId: fields[4] as String,
+      replyTo: fields[5] as String,
+      chatType: fields[6] as String,
       seen: fields[3] as bool,
     );
   }
@@ -27,7 +30,7 @@ class MessageAdapter extends TypeAdapter<Message> {
   @override
   void write(BinaryWriter writer, Message obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.user)
       ..writeByte(1)
@@ -35,7 +38,13 @@ class MessageAdapter extends TypeAdapter<Message> {
       ..writeByte(2)
       ..write(obj.date)
       ..writeByte(3)
-      ..write(obj.seen);
+      ..write(obj.seen)
+      ..writeByte(4)
+      ..write(obj.roomId)
+      ..writeByte(5)
+      ..write(obj.replyTo)
+      ..writeByte(6)
+      ..write(obj.chatType);
   }
 
   @override

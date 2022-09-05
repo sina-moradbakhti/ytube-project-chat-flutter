@@ -11,17 +11,16 @@ class RoomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final int badgeCount = contact.messages
-    //     .where((element) => element.seen == false)
-    //     .toList()
-    //     .length;
-    final int badgeCount = 0;
+    final int badgeCount = room.messages
+        .where((element) => element.seen == false)
+        .toList()
+        .length;
 
     return Stack(
       alignment: Alignment.center,
       children: [
         InkWell(
-          // onTap: () => Get.toNamed(PageRoutes.chat, arguments: contact.user),
+          onTap: () => Get.toNamed(PageRoutes.chat, arguments: room),
           child: Container(
             decoration: BoxDecoration(
               border: Border(
