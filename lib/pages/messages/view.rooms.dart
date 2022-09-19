@@ -15,15 +15,56 @@ class MessagesRoomsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 60),
-      child: StreamBuilder(
-          stream: messagesGet.roomStream.stream,
-          builder: (context, snapshot) => messagesGet.rooms.isNotEmpty
-              ? ListView.builder(
-                  itemBuilder: (context, index) => RoomWidget(
-                        room: messagesGet.rooms[index],
+      child: Column(
+        children: [
+          Obx(
+            () => messagesGet.isSearchEnabled.value
+                ? SizedBox(
+                    height: 50,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: TextField(
+                        onChanged: (newVal) {
+                          messagesGet.searchValue.value = newVal;
+                          messagesGet.roomStream.sink.add(true);
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Search ...',
+                          border: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                        ),
                       ),
-                  itemCount: messagesGet.rooms.length)
-              : _emptyWidget),
+                    ))
+                : Container(),
+          ),
+          Expanded(
+            child: StreamBuilder(
+                stream: messagesGet.roomStream.stream,
+                builder: (context, snapshot) {
+                  final rooms = messagesGet.searchValue.value.isNotEmpty
+                      ? messagesGet.rooms
+                          .where((element) => (element.name
+                              .toLowerCase()
+                              .contains(
+                                  messagesGet.searchValue.value.toLowerCase())))
+                          .toList()
+                      : messagesGet.rooms;
+                  return rooms.isNotEmpty
+                      ? ListView.builder(
+                          itemBuilder: (context, index) {
+                            return RoomWidget(
+                              room: rooms[index],
+                            );
+                          },
+                          itemCount: rooms.length)
+                      : _emptyWidget;
+                }),
+          ),
+        ],
+      ),
     );
   }
 

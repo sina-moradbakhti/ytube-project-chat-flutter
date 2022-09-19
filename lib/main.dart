@@ -1,4 +1,3 @@
-import 'package:chatify/cacheManager/user.cache.dart';
 import 'package:chatify/constants/config.dart';
 import 'package:chatify/models/contact.dart';
 import 'package:chatify/models/message.dart';
@@ -7,6 +6,8 @@ import 'package:chatify/models/user.dart';
 import 'package:chatify/pages/chat/view.dart';
 import 'package:chatify/pages/login/view.dart';
 import 'package:chatify/pages/messages/view.dart';
+import 'package:chatify/pages/properties/view.contact.dart';
+import 'package:chatify/pages/properties/view.room.dart';
 import 'package:chatify/pages/register/view.dart';
 import 'package:chatify/pages/settings/view.dart';
 import 'package:chatify/pages/splash/view.dart';
@@ -47,6 +48,8 @@ class MyApp extends StatelessWidget {
             GetPage(name: PageRoutes.settings, page: () => Settings()),
             GetPage(name: PageRoutes.splash, page: () => Splash()),
             GetPage(name: PageRoutes.chat, page: () => Chat()),
+            GetPage(name: PageRoutes.roomProperties, page: () => RoomProperties()),
+            GetPage(name: PageRoutes.contactProperties, page: () => ContactProperties()),
           ],
         ));
   }

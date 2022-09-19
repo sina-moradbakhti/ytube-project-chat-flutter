@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatify/constants/colors.dart';
 import 'package:chatify/constants/config.dart';
 import 'package:chatify/constants/text_styles.dart';
@@ -36,6 +37,11 @@ class MessageWidget extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 28,
                     backgroundColor: Colors.grey.shade300,
+                    child: CachedNetworkImage(
+                      imageUrl: Config.showAvatarBaseUrl(contact.user.id),
+                      errorWidget: (context, url, error) => Icon(Icons.person,
+                          color: Colors.grey.shade400, size: 50),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -52,12 +58,19 @@ class MessageWidget extends StatelessWidget {
                             child: Text(contact.user.fullname,
                                 style: MyTextStyles.title),
                           ),
-                          Text('09:13 AM', style: MyTextStyles.small)
+                          Text(
+                              contact.messages.isNotEmpty
+                                  ? _beautifyDate(contact.messages.last.date)
+                                  : '',
+                              style: MyTextStyles.small)
                         ],
                       ),
                       SizedBox(
                         height: 16,
-                        child: Text('...',
+                        child: Text(
+                            contact.messages.isNotEmpty
+                                ? contact.messages.last.message
+                                : '',
                             style: MyTextStyles.headline
                                 .copyWith(overflow: TextOverflow.ellipsis)),
                       ),
@@ -84,5 +97,9 @@ class MessageWidget extends StatelessWidget {
           ),
       ],
     );
+  }
+
+  String _beautifyDate(DateTime date) {
+    return "${date.month}/${date.day} ${date.hour}:${date.minute}";
   }
 }

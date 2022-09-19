@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatify/constants/colors.dart';
+import 'package:chatify/constants/config.dart';
 import 'package:chatify/constants/text_styles.dart';
 import 'package:chatify/pages/chat/chat.get.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,7 +29,26 @@ class Chat extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: CircleAvatar(
-                    radius: 20, backgroundColor: Colors.grey.shade300),
+                  radius: 20,
+                  backgroundColor: Colors.grey.shade300,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+                    child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: chatGet.contact?.user.id == null
+                            ? Config.showRoomAvatarBaseUrl(
+                                chatGet.room?.id ?? '')
+                            : Config.showAvatarBaseUrl(
+                                chatGet.contact?.user.id ?? ''),
+                        errorWidget: (context, url, error) => Icon(Icons.person,
+                            color: Colors.grey.shade400, size: 25),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -72,7 +93,8 @@ class Chat extends StatelessWidget {
                       final isMyMessage = message.isMyMessage();
                       return chatGet.room != null
                           ? Padding(
-                              padding: const EdgeInsets.only(bottom: 15, left: 10),
+                              padding:
+                                  const EdgeInsets.only(bottom: 15, left: 10),
                               child: Column(
                                 children: [
                                   if (!isMyMessage)

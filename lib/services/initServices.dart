@@ -33,12 +33,11 @@ class InitServices extends BaseService {
     List<Map<String, dynamic>> latestDates = [];
     final rooms = await HiveCacheManager().getAllRooms();
     for (final room in rooms) {
+      final newList = room.messages
+          .where((element) => element.user.id != Config.me!.userId)
+          .toList();
       final date = room.messages.isNotEmpty
-          ? (room.messages
-              .where((element) => element.user.id != Config.me!.userId)
-              .last
-              .date
-              .toString())
+          ? (newList.isNotEmpty ? newList.last.date.toString() : '')
           : null;
       latestDates.add({'roomId': room.id, 'dateTime': date});
     }

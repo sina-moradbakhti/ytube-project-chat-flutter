@@ -21,6 +21,8 @@ class ChatGet extends GetxController {
   List<Message> messages = [];
   final onUpdateStream = PublishSubject<bool>();
 
+  final messagesGet = Get.find<MessagesGet>();
+
   @override
   void onInit() {
     if (Get.arguments.runtimeType == Room) {
@@ -76,7 +78,13 @@ class ChatGet extends GetxController {
     super.dispose();
   }
 
-  void userInfo() {}
+  void userInfo() {
+    if (contact == null) {
+      Get.toNamed(PageRoutes.roomProperties, arguments: room!);
+    } else {
+      Get.toNamed(PageRoutes.contactProperties, arguments: contact!);
+    }
+  }
 
   void send() {
     if (message.value.isEmpty) return;
@@ -94,6 +102,7 @@ class ChatGet extends GetxController {
     message.value = '';
     controller.clear();
     onUpdateStream.sink.add(true);
+    messagesGet.contactsStream.sink.add(true);
   }
 
   void sendMessageInRoom() {
@@ -113,5 +122,6 @@ class ChatGet extends GetxController {
     message.value = '';
     controller.clear();
     onUpdateStream.sink.add(true);
+    messagesGet.roomStream.sink.add(true);
   }
 }

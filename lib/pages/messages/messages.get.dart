@@ -7,6 +7,9 @@ import 'package:get/get.dart';
 import 'package:rxdart/subjects.dart';
 
 class MessagesGet extends GetxController {
+  var isSearchEnabled = false.obs;
+  var searchValue = ''.obs;
+
   PublishSubject<bool> contactsStream = PublishSubject<bool>();
   PublishSubject<bool> roomStream = PublishSubject<bool>();
   List<Contact> contacts = [];

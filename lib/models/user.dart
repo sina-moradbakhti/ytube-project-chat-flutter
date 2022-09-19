@@ -18,11 +18,14 @@ class User extends HiveObject {
       required this.id,
       required this.username,
       this.role = 'normal'});
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory User.fromJson(Map<String, dynamic> json) {
+    print('${json}\n');
+    return User(
       id: json['_id'] ?? '',
       fullname: json['fullName'] ?? '',
       username: json['userName'] ?? '',
       role: json['role'] ?? 'normal');
+  }
 
   factory User.fromSocketJson(Map<String, dynamic> json) => User(
       id: json['userId'],

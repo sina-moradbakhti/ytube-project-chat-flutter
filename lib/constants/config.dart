@@ -9,6 +9,8 @@ class Config {
   static const socketServerBaseUrl = 'http://localhost:8888';
   static String showAvatarBaseUrl(String userId) =>
       '${Config.httpsServicesBaseUrl}/avatar/$userId';
+  static String showRoomAvatarBaseUrl(String roomId) =>
+      '${Config.httpsServicesBaseUrl}/room-avatar/$roomId';
   static ThemeData primaryThemeData = ThemeData(
       primarySwatch: Colors.green,
       fontFamily: 'Nexa',
@@ -53,4 +55,7 @@ class PageRoutes {
   static const String settings = '/settings';
   static const String splash = '/splash';
   static const String chat = '/chat';
+
+  static const String roomProperties = '/room-properties';
+  static const String contactProperties = '/contact-properties';
 }

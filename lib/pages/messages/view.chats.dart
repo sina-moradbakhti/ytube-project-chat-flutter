@@ -15,15 +15,56 @@ class MessagesChatsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 60),
-      child: StreamBuilder(
-          stream: messagesGet.contactsStream.stream,
-          builder: (context, snapshot) => messagesGet.contacts.isNotEmpty
-              ? ListView.builder(
-                  itemBuilder: (context, index) => MessageWidget(
-                        contact: messagesGet.contacts[index],
+      child: Column(
+        children: [
+          Obx(
+            () => messagesGet.isSearchEnabled.value
+                ? SizedBox(
+                    height: 50,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: TextField(
+                        onChanged: (newVal) {
+                          messagesGet.searchValue.value = newVal;
+                          messagesGet.contactsStream.sink.add(true);
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Search ...',
+                          border: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                        ),
                       ),
-                  itemCount: messagesGet.contacts.length)
-              : _emptyWidget),
+                    ))
+                : Container(),
+          ),
+          Expanded(
+            child: StreamBuilder(
+                stream: messagesGet.contactsStream.stream,
+                builder: (context, snapshot) {
+                  final contacts = messagesGet.searchValue.value.isNotEmpty
+                      ? messagesGet.contacts
+                          .where((element) => (element.user.fullname
+                                  .toLowerCase()
+                                  .contains(messagesGet.searchValue.value
+                                      .toLowerCase()) ||
+                              element.user.username.toLowerCase().contains(
+                                  messagesGet.searchValue.value.toLowerCase())))
+                          .toList()
+                      : messagesGet.contacts;
+                  return contacts.isNotEmpty
+                      ? ListView.builder(
+                          itemBuilder: (context, index) => MessageWidget(
+                                contact: contacts[index],
+                              ),
+                          itemCount: contacts.length)
+                      : _emptyWidget;
+                }),
+          ),
+        ],
+      ),
     );
   }
 
